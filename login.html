@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card" style="max-width:420px;margin:60px auto;">
+  <h2>Teacher Login</h2>
+  <p class="lead">Exam result anomaly detection dashboard</p>
+  <form method="post">
+    <input name="username" placeholder="Username" required style="width:100%"><br>
+    <input name="password" type="password" placeholder="Password" required style="width:100%"><br>
+    <button type="submit" style="width:100%;margin-top:8px">Login</button>
+  </form>
+  <p style="margin-top:14px"><small>Demo: <b>teacher</b> / <b>teacher123</b></small></p>
+</div>
+{% endblock %}

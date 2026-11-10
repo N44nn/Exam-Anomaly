@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Run Spark Analysis</h1>
+<div class="card">
+  <p>Pipeline: <b>Database → CSV → HDFS → Spark → Dashboard</b></p>
+  <p>If HDFS is down, the job auto-falls back to local files.</p>
+  <form method="post">
+    <button type="submit">Run analysis</button>
+  </form>
+  <p><small>Usually 30–90 seconds.</small></p>
+</div>
+{% endblock %}

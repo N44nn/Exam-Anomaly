@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Flagged Cases</h1>
+<p class="lead">Ranked by suspicion score. The system only flags cases for review — it does not confirm malpractice.</p>
+
+<div class="card" style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
+  <form method="post" action="/load-demo" style="margin:0;">
+    <button type="submit">Load Demo Data</button>
+  </form>
+  <form method="post" action="/clear-data" style="margin:0;" onsubmit="return confirm('Clear ALL data (students, marks, answers, flags)?');">
+    <input type="hidden" name="mode" value="all">
+    <button type="submit" style="background:#7f1d1d;border-color:#f87171;">Clear All Data</button>
+  </form>
+  <form method="post" action="/clear-data" style="margin:0;">
+    <input type="hidden" name="mode" value="flags">
+    <button type="submit" style="background:#444;border-color:#888;">Clear Flags Only</button>
+  </form>
+  <a class="btn" href="/run">Run Analysis</a>
+</div>
+
+<div class="stats">
+  <div class="stat"><strong class="High">{{ counts.High }}</strong>High risk</div>
+  <div class="stat"><strong class="Medium">{{ counts.Medium }}</strong>Medium</div>
+  <div class="stat"><strong class="Low">{{ counts.Low }}</strong>Low</div>
+  <div class="stat"><strong>{{ total }}</strong>Total flagged</div>
+</div>
+
+{% if rows %}
+<table>
+  <tr>
+    <th>Student</th><th>Subject</th><th>Risk</th><th>Score</th><th>Signals</th><th></th>
+  </tr>
+  {% for r in rows %}
+  <tr>
+    <td>{{ r.student_id }}</td>
+    <td>{{ r.subject }}</td>
+    <td class="{{ r.risk }}">{{ r.risk }}</td>
+    <td>{{ r.suspicion_score }}</td>
+    <td>{{ r.signals }}</td>
+    <td><a href="/student/{{ r.student_id }}?exam={{ r.exam_id }}">Detail</a></td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<div class="card">
+  <p>No flagged cases yet.</p>
+  <p>Click <b>Load Demo Data</b>, then <a href="/run">Run Analysis</a>.</p>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Exam Anomaly Detection</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #160b22;
+      --panel: #221433;
+      --panel2: #2c1a40;
+      --border: #4a3068;
+      --text: #efe6f8;
+      --muted: #b9a3d0;
+      --purple: #8b5cf6;
+      --purple-dk: #6d28d9;
+      --purple-lt: #c4b5fd;
+      --hi: #f87171;
+      --md: #fbbf24;
+      --lo: #4ade80;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "IBM Plex Sans", "Segoe UI", Tahoma, sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    nav {
+      display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+      padding: 12px 24px;
+      background: var(--purple-dk);
+      border-bottom: 2px solid var(--purple);
+    }
+    nav b {
+      flex: 1;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      color: #fff;
+    }
+    nav a {
+      color: #e9e0ff;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      padding: 6px 12px;
+      border-radius: 4px;
+    }
+    nav a:hover { background: rgba(255,255,255,0.12); color: #fff; }
+    main { max-width: 940px; margin: 24px auto; padding: 0 16px 48px; }
+    h1 {
+      font-size: 24px; font-weight: 700; margin: 0 0 6px;
+      color: #fff; letter-spacing: -0.02em;
+    }
+    h2 {
+      font-size: 20px; font-weight: 700; margin: 0 0 12px; color: #fff;
+      border-bottom: 2px solid var(--purple); padding-bottom: 6px; display: inline-block;
+    }
+    h3 { font-size: 16px; font-weight: 600; margin: 0 0 10px; color: var(--purple-lt); }
+    p, small, .lead { color: var(--muted); }
+    .lead { margin: 0 0 18px; }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 16px 18px;
+      margin: 12px 0;
+    }
+    .stats { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0; }
+    .stat {
+      flex: 1; min-width: 110px;
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px;
+      text-align: center;
+    }
+    .stat strong { display: block; font-size: 22px; font-weight: 700; color: #fff; }
+    .High { color: var(--hi); font-weight: 700; }
+    .Medium { color: var(--md); font-weight: 700; }
+    .Low { color: var(--lo); font-weight: 700; }
+    input, select, button {
+      font-family: inherit;
+      font-size: 14px;
+      padding: 8px 10px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      margin: 3px 3px 3px 0;
+    }
+    input::placeholder { color: #7a668f; }
+    button, .btn {
+      background: var(--purple-dk);
+      color: #fff;
+      border: 1px solid var(--purple);
+      cursor: pointer;
+      font-weight: 600;
+      padding: 8px 16px;
+      text-decoration: none;
+      display: inline-block;
+    }
+    button:hover, .btn:hover { background: var(--purple); }
+    table { width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 13.5px; }
+    th, td {
+      border-bottom: 1px solid var(--border);
+      padding: 9px 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      color: var(--purple-lt);
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    tr:hover td { background: rgba(139, 92, 246, 0.06); }
+    a { color: var(--purple-lt); font-weight: 600; }
+    .msg {
+      background: #2a2110;
+      border: 1px solid #92700c;
+      color: #f5e6a8;
+      padding: 10px 12px;
+      border-radius: 4px;
+      margin: 10px 0;
+      font-size: 14px;
+    }
+    pre, code {
+      font-family: "IBM Plex Mono", Consolas, monospace;
+      font-size: 12.5px;
+    }
+    pre {
+      background: #0d0714;
+      color: #d8c7f0;
+      padding: 12px;
+      border-radius: 4px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      border: 1px solid var(--border);
+    }
+
+    .banner {
+      border-radius: 8px;
+      padding: 16px 18px;
+      margin: 12px 0 18px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+    }
+    .banner.High { border-left: 6px solid var(--hi); }
+    .banner.Medium { border-left: 6px solid var(--md); }
+    .banner.Low { border-left: 6px solid var(--lo); }
+    .banner-top { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 12px; }
+    .badge {
+      display: inline-block; padding: 4px 12px; border-radius: 999px;
+      font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .badge.High { background: #7f1d1d; color: #fecaca; }
+    .badge.Medium { background: #78350f; color: #fde68a; }
+    .badge.Low { background: #14532d; color: #bbf7d0; }
+    .score { font-weight: 700; color: #fff; font-size: 15px; }
+    .sub { color: var(--muted); font-size: 14px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip {
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      color: var(--purple-lt);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  {% if session.user %}
+  <nav>
+    <b>Exam Anomaly Detection</b>
+    <a href="/">Flagged Cases</a>
+    <a href="/upload">Upload Data</a>
+    <a href="/run">Run Analysis</a>
+    <a href="/logout">Logout ({{ session.user }})</a>
+  </nav>
+  {% endif %}
+  <main>
+    {% with messages = get_flashed_messages() %}
+      {% for m in messages %}<div class="msg">{{ m }}</div>{% endfor %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

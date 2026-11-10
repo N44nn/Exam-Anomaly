@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ student_id }}{% if name %} — {{ name }}{% endif %}</h1>
+
+{% if flag %}
+<div class="banner {{ flag.risk }}">
+  <div class="banner-top">
+    <span class="badge {{ flag.risk }}">{{ flag.risk }} risk</span>
+    <span class="score">Suspicion {{ flag.suspicion_score }}</span>
+    <span class="sub">{{ flag.subject }}</span>
+  </div>
+  <div class="chips">
+    {% for part in flag.signals.split("; ") if part %}
+    <span class="chip">{{ part }}</span>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+{% if history %}
+<div class="card">
+  <h3>Mark history</h3>
+  <table>
+    <tr><th>Subject</th><th>Date</th><th>Difficulty</th><th>External</th><th>Internal</th></tr>
+    {% for h in history %}
+    <tr>
+      <td>{{ h.subject }}</td><td>{{ h.exam_date }}</td><td>{{ h.difficulty }}</td>
+      <td>{{ h.marks }}</td><td>{{ h.internal_marks }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endif %}
+
+{% if answers %}
+<div class="card">
+  <h3>Answer comparison{% if partner %} with {{ partner }}{% endif %}</h3>
+  <table>
+    <tr>
+      <th style="width:8%">Q</th>
+      <th style="width:46%">{{ student_id }}</th>
+      {% if partner %}<th style="width:46%">{{ partner }}</th>{% endif %}
+    </tr>
+    {% for q, pair in answers.items() %}
+    <tr>
+      <td><b>{{ q }}</b></td>
+      <td>{{ pair[0] or "—" }}</td>
+      {% if partner %}<td>{{ pair[1] or "—" }}</td>{% endif %}
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% else %}
+<div class="card">
+  <p>No answer text for this exam.</p>
+  <p>On Flagged Cases click <b>Load Demo Data</b> (includes S047/S052 sheets), then Run Analysis.</p>
+</div>
+{% endif %}
+
+<p><a href="/">← Back to flagged cases</a></p>
+{% endblock %}

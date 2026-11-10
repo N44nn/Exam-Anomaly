@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Upload Data</h1>
+<p class="lead">Import results, MCQ/typed answers, or handwritten sheets named by roll number (e.g. <code>S047.jpg</code>).</p>
+
+<div class="card">
+  <h3>1. Results CSV</h3>
+  <p><small>Columns: <code>student_id, subject, exam_date, internal_marks, marks, difficulty</code></small></p>
+  <form method="post" enctype="multipart/form-data">
+    <input type="hidden" name="kind" value="results">
+    <input type="file" name="file" accept=".csv" required>
+    <button type="submit">Upload results</button>
+  </form>
+</div>
+
+<div class="card">
+  <h3>2. Answers / MCQ CSV</h3>
+  <p><small>Columns: <code>student_id, subject, exam_date, question_no, response</code> (A/B/C/D or text)</small></p>
+  <form method="post" enctype="multipart/form-data">
+    <input type="hidden" name="kind" value="answers">
+    <input type="file" name="file" accept=".csv" required>
+    <button type="submit">Upload answers</button>
+  </form>
+</div>
+
+<div class="card">
+  <h3>3. Handwritten sheets (photos by roll number)</h3>
+  <p><small>Name each file with the roll number: <code>S030.jpg</code>, <code>S047.jpg</code>, <code>S052.png</code> … Select multiple files. Lines on the sheet should start with Q1: Q2: Q3:</small></p>
+  <form method="post" enctype="multipart/form-data">
+    <input type="hidden" name="kind" value="sheets">
+    <select name="exam_id" required>
+      <option value="">— choose exam —</option>
+      {% for e in exams %}
+      <option value="{{ e.exam_id }}">{{ e.exam_id }} – {{ e.subject }} ({{ e.exam_date }})</option>
+      {% endfor %}
+    </select>
+    <input type="file" name="files" accept="image/*" multiple required>
+    <button type="submit">Run OCR on all</button>
+  </form>
+</div>
+
+<div class="card">
+  <h3>4. Enter one student’s marks</h3>
+  <form method="post">
+    <input type="hidden" name="kind" value="manual">
+    <input name="student_id" placeholder="Student ID (S001)" required>
+    <select name="exam_id">
+      {% for e in exams %}
+      <option value="{{ e.exam_id }}">{{ e.exam_id }} – {{ e.subject }}</option>
+      {% endfor %}
+    </select>
+    <input name="marks" type="number" step="any" placeholder="External marks" required>
+    <input name="internal_marks" type="number" step="any" placeholder="Internal marks" required>
+    <button type="submit">Save</button>
+  </form>
+</div>
+{% endblock %}
